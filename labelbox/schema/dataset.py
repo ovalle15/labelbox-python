@@ -141,7 +141,7 @@ class Dataset(DbObject, Updateable, Deletable):
         url_param = "jsonUrl"
         query_str = """mutation AppendRowsToDatasetPyApi($%s: ID!, $%s: String!){
             appendRowsToDataset(data:{datasetId: $%s, jsonFileUrl: $%s}
-            ){ taskId accepted errorMessage } } """ % (dataset_param, url_param,
+            ){ taskId accepted } } """ % (dataset_param, url_param,
                                                        dataset_param, url_param)
 
         res = self.client.execute(query_str, {
@@ -150,7 +150,8 @@ class Dataset(DbObject, Updateable, Deletable):
         })
         res = res["appendRowsToDataset"]
         if not res["accepted"]:
-            msg = res['errorMessage']
+            #msg = res['errorMessage']
+            msg = "nope"
             raise InvalidQueryError(
                 f"Server did not accept DataRow creation request. {msg}")
 
