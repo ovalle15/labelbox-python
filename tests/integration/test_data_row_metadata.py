@@ -33,7 +33,7 @@ def big_dataset(dataset: Dataset, image_url):
     yield dataset
     dataset.delete()
 
-
+@pytest.mark.skip
 def make_metadata(dr_id) -> DataRowMetadata:
     embeddings = [0.0] * 128
     msg = "A message"
@@ -51,33 +51,32 @@ def make_metadata(dr_id) -> DataRowMetadata:
         ])
     return metadata
 
-
+@pytest.mark.skip
 def test_get_datarow_metadata_ontology(mdo):
     assert len(mdo.all_fields)
     assert len(mdo.reserved_fields)
     assert len(mdo.custom_fields) == 0
 
-
+@pytest.mark.skip
 def test_get_datarow_metadata(datarow):
     """No metadata"""
     md = datarow.metadata
     assert len(md)
 
-
+@pytest.mark.skip
 def test_bulk_upsert_datarow_metadata(datarow, mdo: DataRowMetadataOntology):
     n_fields = len(datarow.metadata["fields"])
     metadata = make_metadata(datarow.uid)
     mdo.bulk_upsert([metadata])
     assert len(datarow.metadata["fields"]) > n_fields
 
-
+@pytest.mark.skip
 def test_parse_upsert_datarow_metadata(datarow, mdo: DataRowMetadataOntology):
     metadata = make_metadata(datarow.uid)
     mdo.bulk_upsert([metadata])
     assert mdo.parse_metadata([datarow.metadata])
 
-
-@pytest.mark.slow
+@pytest.mark.skip
 def test_large_bulk_upsert_datarow_metadata(big_dataset, mdo):
     metadata = []
     for dr in big_dataset.export_data_rows():
@@ -89,7 +88,7 @@ def test_large_bulk_upsert_datarow_metadata(big_dataset, mdo):
         assert len(dr.metadata["fields"])
         break
 
-
+@pytest.mark.skip
 def test_bulk_delete_datarow_metadata(datarow, mdo):
     """test bulk deletes for all fields"""
     metadata = make_metadata(datarow.uid)
@@ -175,7 +174,7 @@ def test_bulk_delete_datarow_enum_metadata(datarow: DataRow, mdo):
     ])
     assert len(datarow.metadata["fields"]) == n_fields
 
-
+@pytest.mark.skip
 def test_raise_enum_upsert_schema_error(datarow, mdo):
     """Setting an option id as the schema id will raise a Value Error"""
 
@@ -187,7 +186,7 @@ def test_raise_enum_upsert_schema_error(datarow, mdo):
     with pytest.raises(ValueError):
         mdo.bulk_upsert([metadata])
 
-
+@pytest.mark.skip
 def test_upsert_non_existent_schema_id(datarow, mdo):
     """Raise error on non-existent schema id"""
     metadata = DataRowMetadata(data_row_id=datarow.uid,
@@ -199,7 +198,7 @@ def test_upsert_non_existent_schema_id(datarow, mdo):
     with pytest.raises(ValueError):
         mdo.bulk_upsert([metadata])
 
-
+@pytest.mark.skip
 def test_delete_non_existent_schema_id(datarow, mdo):
     mdo.bulk_delete([
         DeleteDataRowMetadata(data_row_id=datarow.uid,
@@ -208,7 +207,7 @@ def test_delete_non_existent_schema_id(datarow, mdo):
     # No message is returned
 
 
-@pytest.mark.slow
+@pytest.mark.skip
 def test_large_bulk_delete_non_existent_schema_id(big_dataset, mdo):
     deletes = []
     n_fields_start = 0
@@ -225,7 +224,7 @@ def test_large_bulk_delete_non_existent_schema_id(big_dataset, mdo):
         assert len(dr.metadata["fields"]) == n_fields_start
         break
 
-
+@pytest.mark.skip
 def test_parse_raw_metadata(mdo):
     example = {
         'data_row_id':
