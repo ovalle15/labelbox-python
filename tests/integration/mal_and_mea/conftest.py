@@ -122,7 +122,6 @@ def configured_project(client, ontology, rand_gen, image_url):
 def prediction_id_mapping(configured_project):
     #Maps tool types to feature schema ids
     ontology = configured_project.ontology().normalized
-    breakpoint()
     result = {}
 
     for idx, tool in enumerate(ontology['tools'] + ontology['classifications']):

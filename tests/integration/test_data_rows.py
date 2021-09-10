@@ -184,7 +184,7 @@ def test_data_row_iteration(dataset, image_url) -> None:
 
 def test_data_row_attachments(dataset, image_url):
     attachments = [("IMAGE", image_url), ("TEXT", "test-text"),
-                   ("IMAGE_OVERLAY", image_url), ("HTML", image_url)]
+                   ("IMAGE_OVERLAY", image_url)] #, ("HTML", image_url)]
     task = dataset.create_data_rows([{
         "row_data": image_url,
         "external_id": "test-id",
@@ -215,7 +215,7 @@ def test_data_row_attachments(dataset, image_url):
 
 def test_create_data_rows_sync_attachments(dataset, image_url):
     attachments = [("IMAGE", image_url), ("TEXT", "test-text"),
-                   ("IMAGE_OVERLAY", image_url), ("HTML", image_url)]
+                   ("IMAGE_OVERLAY", image_url)] #, ("HTML", image_url)]
     attachments_per_data_row = 3
     dataset.create_data_rows_sync([{
         "row_data":
