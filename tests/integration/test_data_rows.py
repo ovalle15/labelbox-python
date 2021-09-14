@@ -2,6 +2,7 @@ from tempfile import NamedTemporaryFile
 
 import pytest
 import requests
+import time
 
 from labelbox import DataRow
 from labelbox.exceptions import InvalidQueryError
@@ -34,7 +35,7 @@ def test_data_row_bulk_creation(dataset, rand_gen, image_url):
     data_rows = list(dataset.data_rows())
     assert len(data_rows) == 2
     assert {data_row.row_data for data_row in data_rows} == {image_url}
-
+    """
     # Test creation using file name
     with NamedTemporaryFile() as fp:
         data = rand_gen(str).encode()
@@ -59,6 +60,7 @@ def test_data_row_bulk_creation(dataset, rand_gen, image_url):
     assert len(data_rows) == 5
     url = ({data_row.row_data for data_row in data_rows} - {image_url}).pop()
     assert requests.get(url).content == data
+    """
 
     data_rows[0].delete()
 
@@ -66,17 +68,13 @@ def test_data_row_bulk_creation(dataset, rand_gen, image_url):
 @pytest.mark.slow
 def test_data_row_large_bulk_creation(dataset, image_url):
     # Do a longer task and expect it not to be complete immediately
-    n_local = 2000
-    n_urls = 250
-    with NamedTemporaryFile() as fp:
-        fp.write("Test data".encode())
-        fp.flush()
-        task = dataset.create_data_rows([{
-            DataRow.row_data: image_url
-        }] * n_local + [fp.name] * n_urls)
+
+    task = dataset.create_data_rows([{
+        DataRow.row_data: image_url
+    }] * 500)
     task.wait_till_done()
     assert task.status == "COMPLETE"
-    assert len(list(dataset.data_rows())) == n_local + n_urls
+    assert len(list(dataset.data_rows())) == 500
 
 
 @pytest.mark.xfail(reason="DataRow.dataset() relationship not set")
