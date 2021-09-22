@@ -2,26 +2,11 @@ from labelbox import ProjectRole
 import pytest
 
 
-def test_org_invite(client, organization, environ, queries):
+def test_org_invite(client, organization, queries):
     role = client.get_roles()['LABELER']
     dummy_email = "none@labelbox.com"
     invite_limit = organization.invite_limit()
-
-    if environ.value == "prod":
-        assert invite_limit.remaining > 0, "No invites available for the account associated with this key."
-    elif environ.value != "staging":
-        raise ValueError(
-            f"Expected tests to run against either prod or staging. Found {environ}"
-        )
-
     invite = organization.invite_user(dummy_email, role)
-
-    if environ.value == "prod":
-
-        invite_limit_after = organization.invite_limit()
-        # One user added
-        assert invite_limit.remaining - invite_limit_after.remaining == 1
-        # An invite shouldn't effect the user count until after it is accepted
 
     outstanding_invites = queries.get_invites(client)
     in_list = False
