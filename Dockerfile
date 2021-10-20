@@ -14,4 +14,4 @@ COPY requirements.txt /usr/src/labelbox
 RUN pip install -r requirements.txt
 COPY . /usr/src/labelbox
 
-RUN python setup.py install
+RUN python -vvv setup.py install

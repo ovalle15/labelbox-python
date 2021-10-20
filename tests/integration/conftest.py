@@ -37,7 +37,7 @@ def instance_id() -> str:
 
 
 def graphql_url(instance_id: str) -> str:
-    return f"https://app.replicated-{instance_id}.labelbox.dev/api/_gql"
+    return f"https://app.{instance_id}.labelbox.dev/api/_gql"
 
 
 
@@ -200,7 +200,7 @@ def label_pack(project, rand_gen, image_url):
 
 @pytest.fixture
 def iframe_url(instance_id) -> str:
-    return f"https://editor.replicated-{instance_id}.labelbox.dev"
+    return f"https://editor.{instance_id}.labelbox.dev"
 
 
 @pytest.fixture

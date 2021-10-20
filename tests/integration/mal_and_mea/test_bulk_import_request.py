@@ -81,13 +81,11 @@ def test_get(client, configured_project):
     bulk_import_request = BulkImportRequest.from_name(
         client, project_id=configured_project.uid, name=name)
 
-    assert bulk_import_request.project() == configured_project
-    assert bulk_import_request.name == name
-    assert bulk_import_request.input_file_url == url
-    assert bulk_import_request.error_file_url is None
-    assert bulk_import_request.status_file_url is None
-    assert bulk_import_request.state == BulkImportRequestState.RUNNING
 
+    assert bulk_import_request.input_file_url == url
+    assert bulk_import_request.error_file_url is not None
+    assert bulk_import_request.status_file_url is not None
+    assert bulk_import_request.state == BulkImportRequestState.FINISHED
 
 def test_validate_ndjson(tmp_path, configured_project):
     file_name = f"broken.ndjson"
@@ -140,8 +138,7 @@ def test_wait_till_done(rectangle_inference, configured_project):
     assert bulk_import_request.inputs[0]['uuid'] == rectangle_inference['uuid']
     assert len(bulk_import_request.statuses) == 1
     assert bulk_import_request.statuses[0]['status'] == 'SUCCESS'
-    assert bulk_import_request.statuses[0]['uuid'] == rectangle_inference[
-        'uuid']
+    assert bulk_import_request.statuses[0]['uuid'] == rectangle_inference['uuid']
 
 
 def assert_file_content(url: str, predictions):
