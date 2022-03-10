@@ -49,7 +49,7 @@ def upload_doc(path, section):
     response = requests.post(README_ENDPOINT, json=payload, headers=headers)
     response.raise_for_status()
     data = response.json()
-    change_name(data['slug'], title, headers)
+    finalize_doc(data['slug'], title, headers)
 
 
 def make_sections(sections):
@@ -73,16 +73,17 @@ def make_sections(sections):
         section['id'] = data['id']
         section['slug'] = data['slug']
 
-        change_name(data["slug"], section['title'], headers)
+        finalize_doc(data["slug"], section['title'], headers)
 
     return sections
 
 
-def change_name(slug, title, headers):
+def finalize_doc(slug, title, headers):
     resp = requests.put(f'{README_DOC_ENDPOINT}/{slug}',
                         json={
                             "title": title,
-                            "category": CATEGORY_ID
+                            "category": CATEGORY_ID,
+                            "hidden": False
                         },
                         headers=headers)
     resp.raise_for_status()
